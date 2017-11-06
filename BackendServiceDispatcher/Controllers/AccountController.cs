@@ -36,7 +36,7 @@ namespace BackendServiceDispatcher.Controllers
             var result = await _userManager.CreateAsync(applicationUser, model.Password);
             if (!result.Succeeded)
             {
-                return new BadRequestObjectResult("Errors!");
+                return new BadRequestObjectResult(result.Errors);
             }
             return new OkResult();
         }
