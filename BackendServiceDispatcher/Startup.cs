@@ -11,6 +11,7 @@ using BackendServiceDispatcher.Data;
 using Microsoft.EntityFrameworkCore;
 using BackendServiceDispatcher.Models.AccountEntities;
 using Microsoft.AspNetCore.Identity;
+using BackendServiceDispatcher.Services;
 
 namespace BackendServiceDispatcher
 {
@@ -47,6 +48,7 @@ namespace BackendServiceDispatcher
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddTransient<IEmailSender, EmailSender>();
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddTransient<IServiceProvider>(instance => services.BuildServiceProvider());
