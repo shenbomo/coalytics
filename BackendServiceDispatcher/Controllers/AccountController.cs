@@ -13,7 +13,7 @@ using BackendServiceDispatcher.Extensions;
 namespace BackendServiceDispatcher.Controllers
 {
     [Authorize]
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -30,9 +30,16 @@ namespace BackendServiceDispatcher.Controllers
             _emailSender = emailSender;
         }
 
-        [HttpPost]
+        [HttpGet]
+        [AllowAnonymous]        
+        public IActionResult Get()
+        {
+            return new OkObjectResult("api/Account/");
+        }
+
+        [HttpPost("[action]")]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([FromBody]RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
@@ -52,7 +59,7 @@ namespace BackendServiceDispatcher.Controllers
             return new BadRequestObjectResult(result.Errors);            
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
