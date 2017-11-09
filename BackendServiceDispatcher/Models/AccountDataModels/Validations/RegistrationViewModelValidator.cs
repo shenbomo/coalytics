@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackendServiceDispatcher.Models.AccountViewModels;
+using BackendServiceDispatcher.Models.AccountDataModels;
 
-namespace BackendServiceDispatcher.Models.AccountViewModels.Validations
+namespace BackendServiceDispatcher.Models.AccountDataModels.Validations
 {
-    public class RegistrationViewModelValidator : AbstractValidator<RegistrationViewModel>
+    public class RegistrationViewModelValidator : AbstractValidator<RegistrationDataModel>
     {
         public RegistrationViewModelValidator()
         {

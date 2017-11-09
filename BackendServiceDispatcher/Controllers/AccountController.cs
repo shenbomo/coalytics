@@ -1,5 +1,5 @@
 ﻿using BackendServiceDispatcher.Models.AccountEntities;
-using BackendServiceDispatcher.Models.AccountViewModels;
+using BackendServiceDispatcher.Models.AccountDataModels;
 using BackendServiceDispatcher.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +12,9 @@ using BackendServiceDispatcher.Extensions;
 
 namespace BackendServiceDispatcher.Controllers
 {
+    /// <summary>
+    /// Account Endpoint
+    /// </summary>
     [Authorize]
     [Route("api/[controller]")]
     public class AccountController : Controller
@@ -30,6 +33,10 @@ namespace BackendServiceDispatcher.Controllers
             _emailSender = emailSender;
         }
 
+        /// <summary>
+        /// A Test GET API
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]        
         public IActionResult Get()
@@ -37,28 +44,39 @@ namespace BackendServiceDispatcher.Controllers
             return new OkObjectResult("api/Account/");
         }
 
+        /// <summary>
+        /// User Registration API
+        /// </summary>
+        /// <param name="registrationDataModel"></param>
+        /// <returns></returns>
         [HttpPost("[action]")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([FromBody]RegistrationViewModel model)
+        public async Task<IActionResult> Register([FromBody]RegistrationDataModel registrationDataModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            ApplicationUser applicationUser = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(applicationUser, model.Password);
+            ApplicationUser applicationUser = new ApplicationUser() { UserName = registrationDataModel.Email, Email = registrationDataModel.Email };
+            var result = await _userManager.CreateAsync(applicationUser, registrationDataModel.Password);
             if (result.Succeeded)
             {
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(applicationUser);
                 var callbackUrl = Url.EmailConfirmationLink(applicationUser.Id, code, Request.Scheme);
-                await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                await _emailSender.SendEmailConfirmationAsync(registrationDataModel.Email, callbackUrl);
                 await _signInManager.SignInAsync(applicationUser, isPersistent: false);
                 return new OkResult();
             }
             return new BadRequestObjectResult(result.Errors);            
         }
 
+        /// <summary>
+        /// Email Confirmation API
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         [HttpGet("[action]")]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)

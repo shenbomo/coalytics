@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.Attributes;
-using BackendServiceDispatcher.Models.AccountViewModels.Validations;
+using BackendServiceDispatcher.Models.AccountDataModels.Validations;
 
-namespace BackendServiceDispatcher.Models.AccountViewModels
+namespace BackendServiceDispatcher.Models.AccountDataModels
 {
     [Validator(typeof(RegistrationViewModelValidator))]
-    public class RegistrationViewModel
+    public class RegistrationDataModel
     {
         public string Email { get; set; }
         public string Password { get; set; }
